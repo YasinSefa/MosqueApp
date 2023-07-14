@@ -30,12 +30,6 @@ namespace MosqueApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Email");
-
                     b.Property<DateTime>("Log")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("DateTime");
@@ -51,6 +45,12 @@ namespace MosqueApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Password");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Username");
 
                     b.HasKey("Id");
 
@@ -70,13 +70,13 @@ namespace MosqueApp.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("City")
+                    b.Property<int>("CityId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Coordinate")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()

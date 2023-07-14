@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MosqueApp.Models;
+using MosqueApp.Models.DataContext;
+using MosqueApp.Models.Model;
 using System.Diagnostics;
 
 namespace MosqueApp.Controllers
 {
     public class HomeController : Controller
     {
+        MosqueContext c = new MosqueContext();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -13,9 +16,11 @@ namespace MosqueApp.Controllers
             _logger = logger;
         }
 
+
         public IActionResult Index()
         {
-            return View();
+            var degerler = c.Mosques.ToList();
+            return View(degerler);
         }
 
         public IActionResult Privacy()
@@ -27,6 +32,19 @@ namespace MosqueApp.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public IActionResult NewMosque()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult NewMosque(Mosque m)
+        {
+
+            return View();
         }
     }
 }

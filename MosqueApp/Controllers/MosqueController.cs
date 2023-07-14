@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MosqueApp.Controllers;
+using MosqueApp.Models.DataContext;
 
 namespace MosqueApp.Controllers
 {
     public class MosqueController : Controller
     {
+
         // GET: MosqueController
         public ActionResult Index()
         {
+
             return View();
         }
 
