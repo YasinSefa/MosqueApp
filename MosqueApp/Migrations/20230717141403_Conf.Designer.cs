@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MosqueApp.Migrations
 {
     [DbContext(typeof(MosqueContext))]
-    [Migration("20230714122501_Conf")]
+    [Migration("20230717141403_Conf")]
     partial class Conf
     {
         /// <inheritdoc />
@@ -60,6 +60,25 @@ namespace MosqueApp.Migrations
                     b.ToTable("Admin");
                 });
 
+            modelBuilder.Entity("MosqueApp.Models.Model.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cities");
+                });
+
             modelBuilder.Entity("MosqueApp.Models.Model.Mosque", b =>
                 {
                     b.Property<int>("Id")
@@ -72,9 +91,6 @@ namespace MosqueApp.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Coordinate")
                         .IsRequired()
@@ -98,9 +114,64 @@ namespace MosqueApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TownId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TownId");
+
                     b.ToTable("Mosque");
+                });
+
+            modelBuilder.Entity("MosqueApp.Models.Model.Town", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.ToTable("Towns");
+                });
+
+            modelBuilder.Entity("MosqueApp.Models.Model.Mosque", b =>
+                {
+                    b.HasOne("MosqueApp.Models.Model.Town", "Town")
+                        .WithMany()
+                        .HasForeignKey("TownId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Town");
+                });
+
+            modelBuilder.Entity("MosqueApp.Models.Model.Town", b =>
+                {
+                    b.HasOne("MosqueApp.Models.Model.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("City");
                 });
 #pragma warning restore 612, 618
         }

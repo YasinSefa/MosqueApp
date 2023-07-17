@@ -10,5 +10,7 @@ namespace MosqueApp.Controllers
         {
                 return View();
         }
+
+
     }
 }

@@ -19,7 +19,8 @@ namespace MosqueApp.Controllers
 
         public IActionResult Index()
         {
-            var degerler = c.Mosques.ToList();
+
+                var degerler = c.Mosques.ToList();
             return View(degerler);
         }
 
@@ -34,17 +35,5 @@ namespace MosqueApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
-        public IActionResult NewMosque()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult NewMosque(Mosque m)
-        {
-
-            return View();
-        }
     }
 }

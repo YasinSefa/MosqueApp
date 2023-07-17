@@ -23,7 +23,9 @@ namespace MosqueApp.Models.Model
         [Column(TypeName = "varchar(100)")]
         public string Address { get; set; }
 
-        public int CityId { get; set; }
+        [ForeignKey("Town")]
+        public int TownId { get; set; }
+        public Town Town { get; set; }
 
         [StringLength(50, ErrorMessage = "Max 50 characters")]
         [Column(TypeName = "varchar(50)")]
@@ -31,6 +33,9 @@ namespace MosqueApp.Models.Model
 
         [DisplayName("Hakkında")]
         public string Description { get; set; }
+
+        [DisplayName("Baslık")]
+        public string Title { get; set; }
 
         public string Photos { get; set; }
 

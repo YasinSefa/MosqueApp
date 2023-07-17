@@ -12,6 +12,8 @@ namespace MosqueApp.Models.DataContext
 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Mosque> Mosques { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Town> Towns { get; set; }
     }
 
 }

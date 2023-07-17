@@ -1,0 +1,54 @@
+﻿@using MosqueApp.Models.Model;
+@model List<Mosque>;
+
+@{
+    ViewData["Title"] = "ListMosque";
+    Layout = "~/Views/Shared/_SiteLayout.cshtml";
+}
+
+<br />
+<table class="table table-bordered">
+    <tr>
+        <th>Cami Adı</th>
+        <th>Şehir</th>
+        <th>Sil</th>
+        <th>Güncelle</th>
+        <th>Detaylar</th>
+    </tr>
+    @foreach (var x in Model)
+    {
+        <tr>
+            <td>@x.Name</td>
+            <td>
+                @foreach (var city in Model)
+                {
+                    <option value="@city.Id">@city.Name</option>
+                }
+            </td>
+            <td>
+                <a href="#" class="btn btn-danger btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <span class="text">Sil</span>
+                </a>
+            </td>
+            <td>
+                <a href="#" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Güncelle</span>
+                </a>
+            </td>
+            <td>
+                <a href="#" class="btn btn-info btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                    <span class="text">Detaylar</span>
+                </a>
+            </td>
+        </tr>
+    }
+</table>
