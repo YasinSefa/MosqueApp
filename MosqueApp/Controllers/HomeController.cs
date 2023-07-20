@@ -9,6 +9,7 @@ namespace MosqueApp.Controllers
     public class HomeController : Controller
     {
         MosqueContext c = new MosqueContext();
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -20,7 +21,7 @@ namespace MosqueApp.Controllers
         public IActionResult Index()
         {
 
-                var degerler = c.Mosques.ToList();
+            var degerler = c.Mosques.ToList();
             return View(degerler);
         }
 
