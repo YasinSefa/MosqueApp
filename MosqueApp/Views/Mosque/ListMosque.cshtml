@@ -1,5 +1,5 @@
 ﻿﻿@using MosqueApp.Models.Model;
-@model List<Mosque>;
+@model MosqueApp.Models.ViewModel.MosqueViewModel
 
 @{
     ViewData["Title"] = "ListMosque";
@@ -7,48 +7,48 @@
 }
 
 <br />
+
 <table class="table table-bordered">
-    <tr>
-        <th>Cami Adı</th>
-        <th>Şehir</th>
-        <th>Sil</th>
-        <th>Güncelle</th>
-        <th>Detaylar</th>
-    </tr>
-    @foreach (var x in Model)
-    {
+    <thead>
         <tr>
-            <td>@x.Name</td>
-            <td>
-                @foreach (var city in Model)
-                {
-                    <option value="@city.Id">@city.Name</option>
-                }
-            </td>
-            <td>
-                <a href="#" class="btn btn-danger btn-icon-split">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-trash"></i>
-                    </span>
-                    <span class="text">Sil</span>
-                </a>
-            </td>
-            <td>
-                <a href="#" class="btn btn-success btn-icon-split">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-check"></i>
-                    </span>
-                    <span class="text">Güncelle</span>
-                </a>
-            </td>
-            <td>
-                <a href="#" class="btn btn-info btn-icon-split">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-info-circle"></i>
-                    </span>
-                    <span class="text">Detaylar</span>
-                </a>
-            </td>
+            <th>İsmi</th>
+            <th>Şehir</th>
+            <th>Sil</th>
+            <th>Güncelle</th>
+            <th>Detaylar</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var mosque in Model.Mosques)
+        {
+            <tr>
+                <td>@mosque.Name</td>
+                <td><option value="@mosque.TownId">@mosque.Town.City.Name</option></td>
+                <td>
+                    <a href="/Mosque/Delete/@mosque.Id" class="btn btn-danger btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                        <span class="text">Sil</span>
+                    </a>
+                </td>
+                <td>
+                    <a href="/Mosque/EditMosque/@mosque.Id" class="btn btn-success btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="text">Güncelle</span>
+                    </a>
+                </td>
+                <td>
+                    <a href="#" class="btn btn-info btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                        <span class="text">Detaylar</span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

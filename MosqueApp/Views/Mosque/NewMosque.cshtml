@@ -35,11 +35,7 @@
             <h3 class="tile-title">Cami Ekle</h3>
             <br />
             <div class="tile-body">
-                <form class="row">
-                    <div class="mb-3">
-                        <label class="form-label">Cami Adı</label>
-                        <input class="form-control" type="text" placeholder="Cami adını giriniz">
-                    </div>
+                <form class="row" method="post">
                     <!-- Cities için DropDownList -->
                     <div class="mb-3">
                         <div class="form-group">
@@ -54,22 +50,26 @@
                     <div class="mb-3">
                         <div class="form-group">
                             <label for="townSelect">İlçe seçin:</label>
-                            <select id="townSelect" class="form-control" asp-for="SelectedTownId" asp-items="@(new SelectList(Model.Towns, "Id", "Name"))">
+                            <select id="townSelect" class="form-control" asp-for="SelectedTownId">
                                 <option value="">İlçe seçin</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Cami Adı</label>
+                        @Html.TextBoxFor(x => x.Mosque.Name, new { @class = "form-control", placeholder = "Cami adını giriniz" })
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Adresi</label>
-                        <input class="form-control" type="email" placeholder="Cami adresini giriniz">
+                        @Html.TextBoxFor(x => x.Mosque.Address, new { @class = "form-control", placeholder = "Cami adresini giriniz" })
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Koordinat</label>
-                        <input class="form-control" type="email" placeholder="Cami koordinatını giriniz">
+                        @Html.TextBoxFor(x => x.Mosque.Coordinate, new { @class = "form-control", placeholder = "Cami koordinatını giriniz" })
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Cami Hakkında</label>
-                        <textarea class="form-control" rows="4" placeholder="Cami hakkındaki bilgileri yazın"></textarea>
+                        @Html.TextAreaFor(x => x.Mosque.Description, new { @class = "form-control", placeholder = "Cami hakkındaki bilgileri yazın", rows = "4" })
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Gizlilik</label>
@@ -99,10 +99,11 @@
                             </label>
                         </div>
                     </div>
+                    <div class="tile-footer">
+                        <button class="btn btn-info"><i class="bi bi-check-circle-fill me-2"></i>Ekle</button>
+                        &nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="bi bi-x-circle-fill me-2"></i>İptal Et</a>
+                    </div>
                 </form>
-            </div>
-            <div class="tile-footer">
-                <button class="btn btn-primary" type="button"><i class="bi bi-check-circle-fill me-2"></i>Ekle</button>&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="bi bi-x-circle-fill me-2"></i>İptal Et</a>
             </div>
         </div>
     </div>

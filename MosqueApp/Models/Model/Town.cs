@@ -13,7 +13,10 @@ namespace MosqueApp.Models.Model
         [StringLength(50, ErrorMessage = "Max 50 characters")]
         [Column("Name", TypeName = "varchar(50)")]
         public string Name { get; set; }
-        
+
+        [Column("TownId")]
+        public int TownId { get; set; }
+
         [ForeignKey("City")]
         public int CityId { get; set; }
 

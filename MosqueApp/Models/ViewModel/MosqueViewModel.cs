@@ -2,8 +2,9 @@
 
 namespace MosqueApp.Models.ViewModel
 {
-    public class MosqueViewModel
+    public class MosqueViewModel 
     {
+        public Mosque Mosque { get; set; }
         public List<Admin> Admins { get; set; }
         public List<Mosque> Mosques { get; set; }
         public List<City> Cities { get; set; }

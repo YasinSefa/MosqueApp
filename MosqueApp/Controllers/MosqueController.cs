@@ -53,9 +53,41 @@ namespace MosqueApp.Controllers
         }
 
         // GET: MosqueController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult EditMosque(int id)
         {
-            return View();
+            var cities = _context.Cities.ToList();
+            var admins = _context.Admins.ToList();
+            var mosques = _context.Mosques.ToList();
+            var towns = _context.Towns.ToList();
+            var mosque = _context.Mosques.Find(id);
+            
+
+
+            var viewModel = new MosqueViewModel
+            {
+                Cities = cities,
+                Admins = admins,
+                Mosques = mosques,
+                Towns = towns,
+                Mosque = mosque,
+                // Diğer özellikleri de burada doldurabilirsiniz.
+                // SelectedCityId = ...,
+                // SelectedTownId = ...,
+            };
+
+            return View("EditMosque",viewModel);
+        }
+
+        public IActionResult UpdateMosque(Mosque mosque,int cityId)
+        {
+            var mos = _context.Mosques.Find(cityId);
+            mos.TownId = mosque.Town.Id;
+            mos.Name = mosque.Name;
+            mos.Address = mosque.Address;
+            mos.Coordinate = mosque.Coordinate;
+            mos.Description = mosque.Description;
+            _context.SaveChanges();
+            return RedirectToAction("ListMosque");
         }
 
         // POST: MosqueController/Edit/5
@@ -71,12 +103,6 @@ namespace MosqueApp.Controllers
             {
                 return View();
             }
-        }
-
-        // GET: MosqueController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
         }
 
         // POST: MosqueController/Delete/5
@@ -100,6 +126,7 @@ namespace MosqueApp.Controllers
             return Json(new SelectList(state,"Id","Name"));
         }
 
+        [HttpGet]
         public IActionResult NewMosque()
         {
             var cities = _context.Cities.ToList();
@@ -121,10 +148,56 @@ namespace MosqueApp.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
+        public IActionResult NewMosque(Mosque mosque)
+        {
+            var cities = _context.Cities.ToList();
+            var admins = _context.Admins.ToList();
+            var mosques = _context.Mosques.ToList();
+            var towns = _context.Towns.ToList();
+
+            var viewModel = new MosqueViewModel
+            {
+                Cities = cities,
+                Admins = admins,
+                Mosques = mosques,
+                Towns = towns,
+                // Diğer özellikleri de burada doldurabilirsiniz.
+                // SelectedCityId = ...,
+                // SelectedTownId = ...,
+            };
+            _context.Mosques.Add(mosque);
+            _context.SaveChanges();
+            return RedirectToAction("NewMosque");
+        }
+
         public IActionResult ListMosque()
         {
-            var degerler = _context.Mosques.ToList();
-            return View(degerler);
+            var cities = _context.Cities.ToList();
+            var admins = _context.Admins.ToList();
+            var mosques = _context.Mosques.ToList();
+            var towns = _context.Towns.ToList();
+
+            var viewModel = new MosqueViewModel
+            {
+                Cities = cities,
+                Admins = admins,
+                Mosques = mosques,
+                Towns = towns,
+                // Diğer özellikleri de burada doldurabilirsiniz.
+                // SelectedCityId = ...,
+                // SelectedTownId = ...,
+            };
+            return View(viewModel);
+        }
+
+
+        public IActionResult Delete(int id)
+        {
+            var mos = _context.Mosques.Find(id);
+            _context.Mosques.Remove(mos);
+            _context.SaveChanges();
+            return RedirectToAction("ListMosque");
         }
 
         [HttpGet]
@@ -137,31 +210,9 @@ namespace MosqueApp.Controllers
             return RedirectToAction("Success"); // Başarılı sayfasına yönlendirme yapabilirsiniz.
         }
 
-        [HttpPost]
-        public IActionResult SelectedCityId(MosqueViewModel viewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                // Şehir nesnesini ViewModel'den doğrudan alabiliriz.
-                City selectedCity = viewModel.Cities.FirstOrDefault(city => city.Id == viewModel.SelectedCityId);
 
-                if (selectedCity != null)
-                {
-                    // Şimdi seçilen şehir nesnesini kullanabiliriz.
-                    // selectedCity.Id veya selectedCity.Name gibi özelliklere erişebiliriz.
-                    int selectedCityId = selectedCity.Id;
 
-                    // Diğer işlemleri yapabilir ve veritabanına kaydedebiliriz.
-                    // ...
-
-                    return RedirectToAction("Index", "Home"); // Örnek bir yönlendirme.
-                }
-            }
-
-            // Eğer ModelState geçerli değilse veya şehir seçilmemişse, aynı sayfada kalınabilir veya uygun bir hata mesajı gösterilebilir.
-            return View("NewMosque", viewModel);
-        }
-
+      
 
     }
 }
