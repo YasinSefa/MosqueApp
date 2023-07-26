@@ -41,14 +41,81 @@
                     </a>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-info btn-icon-split">
+                    <button data-id="@mosque.Id" type="button" class="btn btn-info btn-icon-split" data-toggle="ajax-modal" data-target="#Modal1">
                         <span class="icon text-white-50">
                             <i class="fas fa-info-circle"></i>
                         </span>
                         <span class="text">Detaylar</span>
-                    </a>
+                    </button>
                 </td>
+                <div class="modal" id="Modal1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Cami Hakkında</h2>
+                            </div>
+                            <form>
+                                <div class="modal-body">
+                                    <label class="fw-bold">İl:</label>
+                                    <span id="modalCity"></span><br /><br />
+                                    <label class="fw-bold">İlçe:</label>
+                                    <span id="modalTown"></span><br /><br />
+                                    <label class="fw-bold">Adı:</label>
+                                    <span id="modalName"></span><br /><br />
+                                    <label class="fw-bold">Adresi:</label>
+                                    <span id="modalAddress"></span><br /><br />
+                                    <label class="fw-bold">Koordinat:</label>
+                                    <span id="modalCoordinate"></span><br /><br />
+                                    <br /><label class="fw-bold">Cami Hakkında:</label>
+                                    <span font="" id="modalDescription"></span><br /><br />
+                                    <button class="btn btn-info">Kapat</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </tr>
         }
     </tbody>
 </table>
+
+<script src="~/js/jquery-3.7.0.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/main.js"></script>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("button[data-toggle='ajax-modal']").click(function () {
+                var mosqueId = $(this).data("id");
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Mosque/DetailsMosque", // ControllerAdi kısmını doğru bir şekilde güncelleyin
+                    dataType: 'json',
+                    data: { id: mosqueId },
+                    success: function (result) {
+                        // AJAX başarılı olduğunda çalışacak işlemler burada olur
+                        //$("#modalContent").html(result);
+                        $("#modalCity").text(result.mosque.town.city.name);
+                        $("#modalTown").text(result.mosque.town.name);
+                        $("#modalName").text(result.mosque.name);
+                        $("#modalAddress").text(result.mosque.address);
+                        $("#modalCoordinate").text(result.mosque.coordinate);
+                        $("#modalDescription").text(result.mosque.description);
+
+                        $("#Modal1").modal("show");
+                        
+
+                    },
+                    error: function () {
+                        // AJAX başarısız olduğunda çalışacak işlemler burada olur
+                        alert("BB")
+                        console.error("AJAX isteği başarısız oldu.");
+                    }
+                });
+            });
+        });
+    </script>
+    }
+

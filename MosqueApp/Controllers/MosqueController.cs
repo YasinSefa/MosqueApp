@@ -6,6 +6,7 @@ using MosqueApp.Models.DataContext;
 using MosqueApp.Models.Model;
 using MosqueApp.Models.ViewModel;
 using NuGet.Protocol.Core.Types;
+using System.Text.Json.Nodes;
 
 namespace MosqueApp.Controllers
 {
@@ -77,6 +78,32 @@ namespace MosqueApp.Controllers
 
             return View("EditMosque",viewModel);
         }
+
+        // GET: MosqueController/Edit/5
+        public IActionResult DetailsMosque(int id)
+        {
+            var cities = _context.Cities.ToList();
+            var admins = _context.Admins.ToList();
+            var mosques = _context.Mosques.ToList();
+            var towns = _context.Towns.ToList();
+            var mosque = _context.Mosques.Find(id);
+
+
+
+            var viewModel = new MosqueViewModel
+            {
+                Cities = cities,
+                Admins = admins,
+                Mosques = mosques,
+                Towns = towns,
+                Mosque = mosque,
+
+            };
+
+            return Json(viewModel);
+        }
+
+
 
         public IActionResult UpdateMosque(Mosque mosque,int cityId)
         {
