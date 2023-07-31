@@ -52,6 +52,7 @@
                             <select id="townSelect" class="form-control" asp-for="Mosque.Town.Id" asp-items="@(new SelectList(Model.Towns, "Id", "Name" ,"TownId" , "CityId"))">
                                 <option value="">İlçe seçin</option>
                             </select>
+                            @*@Html.DropDownList("townId", new SelectList(ViewBag.MosqueId, "Id", "Name" ,"TownId" , "CityId"))*@
                         </div>
                     </div>
                     <div class="mb-3">
@@ -149,5 +150,4 @@
         </script>
     }
 </body>
-}
 </html>

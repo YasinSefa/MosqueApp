@@ -6,6 +6,7 @@ namespace MosqueApp.Models.Model
 {
     public class Town
     {
+        [Required(ErrorMessage = "İlçe boş bırakılamaz")]
         [Key]
         public int Id { get; set; }
 

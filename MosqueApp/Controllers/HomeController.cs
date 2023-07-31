@@ -20,9 +20,7 @@ namespace MosqueApp.Controllers
 
         public IActionResult Index()
         {
-
-            var degerler = c.Mosques.ToList();
-            return View(degerler);
+            return View();
         }
 
         public IActionResult Privacy()

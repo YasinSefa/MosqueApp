@@ -61,8 +61,8 @@ namespace MosqueApp.Controllers
             var mosques = _context.Mosques.ToList();
             var towns = _context.Towns.ToList();
             var mosque = _context.Mosques.Find(id);
-            
 
+            ViewBag.MosqueId = mosques.Where(x=> x.Id == mosque.Id).ToList().FirstOrDefault().Town.Id;
 
             var viewModel = new MosqueViewModel
             {
@@ -79,29 +79,8 @@ namespace MosqueApp.Controllers
             return View("EditMosque",viewModel);
         }
 
-        // GET: MosqueController/Edit/5
-        public IActionResult DetailsMosque(int id)
-        {
-            var cities = _context.Cities.ToList();
-            var admins = _context.Admins.ToList();
-            var mosques = _context.Mosques.ToList();
-            var towns = _context.Towns.ToList();
-            var mosque = _context.Mosques.Find(id);
 
 
-
-            var viewModel = new MosqueViewModel
-            {
-                Cities = cities,
-                Admins = admins,
-                Mosques = mosques,
-                Towns = towns,
-                Mosque = mosque,
-
-            };
-
-            return Json(viewModel);
-        }
 
 
 
@@ -158,14 +137,12 @@ namespace MosqueApp.Controllers
         {
             var cities = _context.Cities.ToList();
             var admins = _context.Admins.ToList();
-            var mosques = _context.Mosques.ToList();
             var towns = _context.Towns.ToList();
 
             var viewModel = new MosqueViewModel
             {
                 Cities = cities,
                 Admins = admins,
-                Mosques = mosques,
                 Towns = towns,
                 // Diğer özellikleri de burada doldurabilirsiniz.
                 // SelectedCityId = ...,
@@ -176,27 +153,57 @@ namespace MosqueApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewMosque(Mosque mosque)
+        public IActionResult NewMosque(Mosque mosque, IFormFile QrCode, IFormFile Photos)
         {
-            var cities = _context.Cities.ToList();
-            var admins = _context.Admins.ToList();
-            var mosques = _context.Mosques.ToList();
-            var towns = _context.Towns.ToList();
-
-            var viewModel = new MosqueViewModel
+            if (mosque.TownId == null || string.IsNullOrEmpty(mosque.Name) || string.IsNullOrEmpty(mosque.Title) || string.IsNullOrEmpty(mosque.Address) || string.IsNullOrEmpty(mosque.Coordinate) || string.IsNullOrEmpty(mosque.Description) || QrCode == null || QrCode.Length == 0 || Photos == null || Photos.Length == 0)
             {
-                Cities = cities,
-                Admins = admins,
-                Mosques = mosques,
-                Towns = towns,
-                // Diğer özellikleri de burada doldurabilirsiniz.
-                // SelectedCityId = ...,
-                // SelectedTownId = ...,
-            };
+                ModelState.AddModelError("", "Tüm alanları doldurmalısınız.");
+
+                var cities = _context.Cities.ToList();
+                var admins = _context.Admins.ToList();
+                var towns = _context.Towns.ToList();
+
+                var viewModel = new MosqueViewModel
+                {
+                    Cities = cities,
+                    Admins = admins,
+                    Towns = towns,
+                    // Diğer özellikleri de burada doldurabilirsiniz.
+                    // SelectedCityId = ...,
+                    // SelectedTownId = ...,
+                };
+
+                return View(viewModel);
+            }
+
+            // Veri doğrulama başarılı, devam edin
+
+            if (QrCode != null && QrCode.Length > 0)
+            {
+                // QR Kodu resmini base64 formatında dönüştürün
+                using (var memoryStream = new MemoryStream())
+                {
+                    QrCode.CopyTo(memoryStream);
+                    mosque.QrCode = memoryStream.ToArray();
+                }
+            }
+
+            if (Photos != null && Photos.Length > 0)
+            {
+                // Fotoğrafları base64 formatında dönüştürün
+                using (var memoryStream = new MemoryStream())
+                {
+                    Photos.CopyTo(memoryStream);
+                    mosque.Photos = memoryStream.ToArray();
+                }
+            }
+
+            // Veritabanına ekleme işlemi
             _context.Mosques.Add(mosque);
             _context.SaveChanges();
             return RedirectToAction("NewMosque");
         }
+
 
         public IActionResult ListMosque()
         {
@@ -237,9 +244,64 @@ namespace MosqueApp.Controllers
             return RedirectToAction("Success"); // Başarılı sayfasına yönlendirme yapabilirsiniz.
         }
 
+        [HttpGet]
+        public IActionResult GetPhoto(int id)
+        {
+            var mosque = _context.Mosques.FirstOrDefault(m => m.Id == id);
+            if (mosque == null)
+            {
+                return NotFound(); // 404 Not Found dönebiliriz
+            }
+
+            // Fotoğrafı byte dizisi olarak alıyoruz.
+            byte[] photoData = mosque.Photos;
+
+            // byte dizisini base64 formatına çevirerek JSON olarak dönüyoruz.
+            var base64Photo = Convert.ToBase64String(photoData);
+            return Json(new { photo = base64Photo });
+        }
+
+        [HttpGet]
+        public IActionResult GetQrCode(int id)
+        {
+            var mosque = _context.Mosques.FirstOrDefault(m => m.Id == id);
+            if (mosque == null)
+            {
+                return NotFound(); // 404 Not Found dönebiliriz
+            }
+
+            // QR kodunu byte dizisi olarak alıyoruz.
+            byte[] qrCodeData = mosque.QrCode;
+
+            // byte dizisini base64 formatına çevirerek JSON olarak dönüyoruz.
+            var base64QrCode = Convert.ToBase64String(qrCodeData);
+            return Json(new { qrCode = base64QrCode });
+        }
 
 
-      
+        // GET: MosqueController/Edit/5
+        public IActionResult DetailsMosque(int id)
+        {
+            var cities = _context.Cities.ToList();
+            var admins = _context.Admins.ToList();
+            var mosques = _context.Mosques.ToList();
+            var towns = _context.Towns.ToList();
+            var mosque = _context.Mosques.Find(id);
+
+
+
+            var viewModel = new MosqueViewModel
+            {
+                Cities = cities,
+                Admins = admins,
+                Mosques = mosques,
+                Towns = towns,
+                Mosque = mosque,
+
+            };
+
+            return Json(viewModel);
+        }
 
     }
 }

@@ -8,7 +8,8 @@
 
 <br />
 
-<table class="table table-bordered">
+
+<table class="table table-hover table-bordered" id="sampleTable">
     <thead>
         <tr>
             <th>İsmi</th>
@@ -48,69 +49,151 @@
                         <span class="text">Detaylar</span>
                     </button>
                 </td>
-                <div class="modal" id="Modal1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h2 class="modal-title">Cami Hakkında</h2>
-                            </div>
-                            <form>
-                                <div class="modal-body">
-                                    <label class="fw-bold">İl:</label>
-                                    <span id="modalCity"></span><br /><br />
-                                    <label class="fw-bold">İlçe:</label>
-                                    <span id="modalTown"></span><br /><br />
-                                    <label class="fw-bold">Adı:</label>
-                                    <span id="modalName"></span><br /><br />
-                                    <label class="fw-bold">Adresi:</label>
-                                    <span id="modalAddress"></span><br /><br />
-                                    <label class="fw-bold">Koordinat:</label>
-                                    <span id="modalCoordinate"></span><br /><br />
-                                    <br /><label class="fw-bold">Cami Hakkında:</label>
-                                    <span font="" id="modalDescription"></span><br /><br />
-                                    <button class="btn btn-info">Kapat</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+
+
             </tr>
         }
     </tbody>
 </table>
 
+@*<div class="modal" id="Modal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Cami Hakkında</h2>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <label class="fw-bold">İl:</label>
+                    <span id="modalCity"></span><br />
+                    <label class="fw-bold">İlçe:</label>
+                    <span id="modalTown"></span><br />
+                    <label class="fw-bold">Adı:</label>
+                    <span id="modalName"></span><br />
+                    <label class="fw-bold">Adresi:</label>
+                    <span id="modalAddress"></span><br />
+                    <label class="fw-bold">Koordinat:</label>
+                    <span id="modalCoordinate"></span>
+                    <br /><label class="fw-bold">Cami Hakkında:</label>
+                    <span font="" id="modalDescription"></span><br /><br />
+
+                    <button class="btn btn-info">Kapat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>*@
+
+<div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Cami Detayları</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h4>Şehir:</h4>
+                    <p id="modalCity"></p>
+                </div>
+                <div>
+                    <h4>İlçe:</h4>
+                    <p id="modalTown"></p>
+                </div>
+                <div>
+                    <h4>İsim:</h4>
+                    <p id="modalName"></p>
+                </div>
+                <div>
+                    <h4>Adres:</h4>
+                    <p id="modalAddress"></p>
+                </div>
+                <div>
+                    <h4>Koordinat:</h4>
+                    <p id="modalCoordinate"></p>
+                </div>
+                <div>
+                    <h4>Fotoğraf:</h4>
+                    <img id="modalPhoto" src="" alt="Cami Fotoğrafı" width="300" height="200">
+                </div>
+                <div>
+                    <h4>QR Kodu:</h4>
+                    <img id="modalQrCode" src="" alt="Cami Qr Kodu" width="200" height="200">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/js/jquery-3.7.0.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>
 <script src="~/js/main.js"></script>
+<!-- Data table plugin-->
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
+@*<script type="text/javascript" src="~/js/plugins/dataTables.bootstrap.min.js"></script>*@
+@*<script type="text/javascript">$('#sampleTable').DataTable(
+    {
+            pagingType: 'full_numbers'
+    }
+);</script>*@
 
 @section Scripts {
     <script>
         $(document).ready(function () {
+            let table = new DataTable('#sampleTable', {
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Turkish.json"
+                }
+            });
+
+
             $("button[data-toggle='ajax-modal']").click(function () {
                 var mosqueId = $(this).data("id");
 
                 $.ajax({
                     type: "POST",
-                    url: "/Mosque/DetailsMosque", // ControllerAdi kısmını doğru bir şekilde güncelleyin
+                    url: "/Mosque/DetailsMosque",
                     dataType: 'json',
                     data: { id: mosqueId },
                     success: function (result) {
-                        // AJAX başarılı olduğunda çalışacak işlemler burada olur
-                        //$("#modalContent").html(result);
                         $("#modalCity").text(result.mosque.town.city.name);
                         $("#modalTown").text(result.mosque.town.name);
                         $("#modalName").text(result.mosque.name);
                         $("#modalAddress").text(result.mosque.address);
                         $("#modalCoordinate").text(result.mosque.coordinate);
-                        $("#modalDescription").text(result.mosque.description);
 
-                        $("#Modal1").modal("show");
-                        
+                        // AJAX ile fotoğraf ve QR kodu verilerini alalım
+                        $.ajax({
+                            url: "/Mosque/GetPhoto",
+                            type: "GET",
+                            data: { id: mosqueId },
+                            dataType: "json",
+                            success: function (photoResult) {
+                                var base64Photo = photoResult.photo;
+                                $("#modalPhoto").attr("src", "data:image/jpeg;base64," + base64Photo);
+                            }
+                        });
 
+                        $.ajax({
+                            url: "/Mosque/GetQrCode",
+                            type: "GET",
+                            data: { id: mosqueId },
+                            dataType: "json",
+                            success: function (qrCodeResult) {      
+                                var base64QrCode = qrCodeResult.qrCode;
+                                $("#modalQrCode").attr("src", "data:image/png;base64," + base64QrCode);
+
+                                // Modalı göster
+                                $("#Modal1").modal("show");
+                            }
+                        });
                     },
                     error: function () {
-                        // AJAX başarısız olduğunda çalışacak işlemler burada olur
-                        alert("BB")
                         console.error("AJAX isteği başarısız oldu.");
                     }
                 });
