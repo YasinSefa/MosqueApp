@@ -9,24 +9,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <!-- Twitter meta-->
-    <meta property="twitter:card" content="summary_large_image">
-    <!-- Open Graph Meta-->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Vali Admin">
-    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
-    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
-    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
-    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <title>Form Samples - Vali Admin</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="~/css/edit.css" rel="stylesheet" />
 </head>
 <body class="app sidebar-mini">
     <div class="col-md-20">
@@ -34,9 +23,9 @@
             <h3 class="tile-title">Cami Güncelle</h3>
             <br />
             <div class="tile-body">
-                <form class="row" method="post" action="/Mosque/UpdateMosque">
+                <form class="form-row" method="post" action="/Mosque/UpdateMosque" enctype="multipart/form-data">
                     <!-- Cities için DropDownList -->
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <div class="form-group">
                             <label for="citySelect">İl seçin:</label>
                             <select id="citySelect" class="form-control" asp-for="Mosque.Town.CityId" asp-items="@(new SelectList(Model.Cities, "Id", "Name"))">
@@ -46,7 +35,7 @@
                     </div>
                     <input type="text" value="@Model.Mosque.Id" name="cityId" hidden />
                     <!-- Towns için DropDownList -->
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <div class="form-group">
                             <label for="townSelect">İlçe seçin:</label>
                             <select id="townSelect" class="form-control" asp-for="Mosque.Town.Id" asp-items="@(new SelectList(Model.Towns, "Id", "Name" ,"TownId" , "CityId"))">
@@ -55,44 +44,74 @@
                             @*@Html.DropDownList("townId", new SelectList(ViewBag.MosqueId, "Id", "Name" ,"TownId" , "CityId"))*@
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <label class="form-label">Cami Adı</label>
                         @Html.TextBoxFor(x => x.Mosque.Name, new { @class = "form-control", placeholder = "Cami adını giriniz" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
+                        <label class="form-label">Başlık</label>
+                        <br>
+                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Title)</span>
+                        @Html.TextBoxFor(x => x.Mosque.Title, new { @class = "form-control", placeholder = "Cami başlığı giriniz" })
+                    </div>
+                    <div class="form-group col-md-6">
                         <label class="form-label">Adresi</label>
                         @Html.TextBoxFor(x => x.Mosque.Address, new { @class = "form-control", placeholder = "Cami adresini giriniz" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <label class="form-label">Koordinat</label>
                         @Html.TextBoxFor(x => x.Mosque.Coordinate, new { @class = "form-control", placeholder = "Cami koordinatını giriniz" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-12 mb-3">
                         <label class="form-label">Cami Hakkında</label>
                         @Html.TextAreaFor(x => x.Mosque.Description, new { @class = "form-control", placeholder = "Cami hakkındaki bilgileri yazın", rows = "4" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-3">
+                        <label class="form-label">Cami Qr Kodu</label>
+                        <br />
+                        <img id="modalQrCode" src="" alt="Cami Qr Kodu" width="250" height="250">
+                        <input id="qrCodeInput" class="form-control" type="file" name="QrCode">
+                    </div>
+                    <div class="form-group col-md-9">
+                        <label class="form-label">Cami Fotoğrafları</label>
+                        <div class="photo-container">
+                            <div class="photo-input-container">
+                                <img src="" alt="Cami Fotoğrafı" id="modalPhoto" width="400" height="240">
+                                <div class="input-group">
+                                    <input class="form-control" type="file" accept="image/*" name="Photos1">
+                                    <button id="deleteButton1" type="button" class="btn btn-danger">Sil</button>
+                                </div>
+                            </div>
+                            <div class="photo-input-container">
+                                <img src="" alt="Cami Fotoğrafı" id="modalPhoto1" width="400" height="240">
+                                <div class="input-group">
+                                    <input class="form-control" type="file" accept="image/*" name="Photos2">
+                                    <button id="deleteButton2" type="button" class="btn btn-danger">Sil</button>
+                                </div>
+                            </div>
+                            <div class="photo-input-container">
+                                <img src="" alt="Cami Fotoğrafı" id="modalPhoto2" width="400" height="240">
+                                <div class="input-group">
+                                    <input class="form-control" type="file" accept="image/*" name="Photos3">
+                                    <button id="deleteButton3" type="button" class="btn btn-danger">Sil</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 mb-3">
                         <label class="form-label">Gizlilik</label>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="everyone">Herkes
+                                <input class="form-check-input" type="radio" name="privacy">Herkes
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="admins">Adminler
+                                <input class="form-check-input" type="radio" name="privacy">Adminler
                             </label>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Cami Qr Kodu</label>
-                        <input class="form-control" type="file">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Cami Fotoğrafları</label>
-                        <input class="form-control" type="file">
-                    </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-12 mb-3">
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox">Bilgileri kontrol ettim ve onaylıyorum
@@ -101,13 +120,33 @@
                     </div>
 
                     <div class="tile-footer">
-                        <button type="submit" class="btn btn-info"><i class="bi bi-check-circle-fill me-2"></i>Güncelle</button>
-                        &nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="bi bi-x-circle-fill me-2"></i>İptal Et</a>
+                        <button id="updateButton" type="submit" class="btn btn-info"><i class="bi bi-check-circle-fill me-2"></i>Güncelle</button>
+                        &nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="/Mosque/ListMosque"><i class="bi bi-x-circle-fill me-2"></i>İptal Et</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Camiyi Sil</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Camiyi silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Kapat</button>
+                    <button id="btnYes" class="btn btn-primary btn-danger btn-icon-split"><span class="text">Sil</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Essential javascripts for application to work-->
     <script src="~/js/jquery-3.7.0.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
@@ -129,25 +168,124 @@
 
     @section Scripts {
         <script>
-            $(function () {
+            $(document).ready(function () {
+                var mosqueId = getMosqueIdFromUrl();
+
+                function getMosqueIdFromUrl() {
+                    var path = window.location.pathname; // Şu anki sayfanın URL yolu
+                    var parts = path.split('/'); // URL yolu parçalara ayrılır
+                    var lastPart = parts[parts.length - 1]; // En son parça, yani ID alınır
+                    return lastPart; // ID döndürülür
+                }
+
+
+                // Bu kısım düzgün görünüyor, ancak mosqueId'yi doğru bir şekilde almanız gerekiyor
+                $.ajax({
+                    url: "/Mosque/GetQrCode",
+                    type: "GET",
+                    data: { id: mosqueId },
+                    dataType: "json",
+                    success: function (qrCodeResult) {
+                        var base64QrCode = qrCodeResult.qrCode;
+                        $("#modalQrCode").attr("src", "data:image/png;base64," + base64QrCode);
+                    }
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Mosque/GetPhotosByMosqueId",
+                    data: { mosqueId: mosqueId },
+                    dataType: "json",
+                    success: function (photoResults) {
+                        if (photoResults.length >= 3) {
+                            $("#modalPhoto").attr("src", "data:image/jpeg;base64," + photoResults[0].photo);
+                            $("#modalPhoto1").attr("src", "data:image/jpeg;base64," + photoResults[1].photo);
+                            $("#modalPhoto2").attr("src", "data:image/jpeg;base64," + photoResults[2].photo);
+                        } else if (photoResults.length == 2) {
+                            $("#modalPhoto").attr("src", "data:image/jpeg;base64," + photoResults[0].photo);
+                            $("#modalPhoto1").attr("src", "data:image/jpeg;base64," + photoResults[1].photo);
+                            $("#modalPhoto2").attr("src", "/image/fotoyok.png");
+                        } else if (photoResults.length == 1) {
+                            $("#modalPhoto").attr("src", "data:image/jpeg;base64," + photoResults[0].photo);
+                            $("#modalPhoto1").attr("src", "/image/fotoyok.png");
+                            $("#modalPhoto2").attr("src", "/image/fotoyok.png");
+                        } else {
+                            $("#modalPhoto").attr("src", "/image/fotoyok.png");
+                            $("#modalPhoto1").attr("src", "/image/fotoyok.png");
+                            $("#modalPhoto2").attr("src", "/image/fotoyok.png");
+                        }
+                    },
+                    error: function () {
+                        console.error("AJAX isteği başarısız oldu.");
+                    }
+                });
+
+                var deleteButtons = document.querySelectorAll(".btn-danger");
+                console.log(deleteButtons)
+
+                deleteButtons.forEach(function (button, index) {
+                    button.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        $('#deleteModal').modal('show');
+
+
+
+
+                        // Silme onayını bekleyen düğmeye click olayını ekle
+                        var confirmDeleteButton = document.getElementById("btnYes");
+                        confirmDeleteButton.addEventListener("click", function () {
+                            $.ajax({
+                                type: "GET",
+                                url: "/Mosque/DeletePhoto", // Controller adını değiştirin.
+                                dataType: 'json',
+                                data: { id: index, mosqueId: mosqueId },
+                                success: function (response) {
+                                    console.log('Silme işlemi başarılı.');
+                                    window.location.reload();
+                                },
+                                error: function () {
+                                    console.error('Silme işlemi başarısız oldu.');
+                                }
+                            });
+
+
+
+                        });
+
+
+
+
+
+
+
+                    });
+                });
+
+
+
+                // Bu kısım düzgün görünüyor
                 $("#citySelect").change(function () {
                     $("#townSelect").empty();
 
-                    $.ajax({ // $ajax yerine $.ajax olmalı
+
+                    // $.ajax yerine $(this).ajax olmalı
+                    $(this).ajax({
                         url: '/Mosque/ShowTowns',
                         dataType: 'json',
                         data: { id: $("#citySelect").val() },
                         success: function (data) {
                             $("#townSelect").append("<option value='-1'> İlçe seçin </option>");
 
-                            $.each(data, function (index, value) { // data parametresi değiştirildi
-                                $("#townSelect").append('<option value="' + value.value + '">' + value.text + '</option>'); // Düzeltilmiş satır
+                            // data parametresi doğru, ancak index ve value yerine item ve val kullanmalısınız
+                            $.each(data, function (index, item) {
+                                $("#townSelect").append('<option value="' + item.val + '">' + item.text + '</option>');
                             });
                         }
-                    })
-                })
-            })
+                    });
+                });
+            });
         </script>
     }
+
 </body>
 </html>

@@ -12,7 +12,8 @@ namespace MosqueApp.Models.Model
     public class Mosque
     {
         [Key]
-        public int? Id  { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id  { get; set; }
 
         [Required(ErrorMessage = "İsim boş bırakılamaz")]
         [StringLength(50, ErrorMessage = "Max 50 characters")]
@@ -26,7 +27,7 @@ namespace MosqueApp.Models.Model
 
         [Required(ErrorMessage = "İlçe boş bırakılamaz")]
         [ForeignKey("Town")]
-        public int TownId { get; set; }
+        public int? TownId { get; set; }
         public Town Town { get; set; }
 
         [Required(ErrorMessage = "Kordinat boş bırakılamaz")]
@@ -42,11 +43,21 @@ namespace MosqueApp.Models.Model
         [DisplayName("Baslık")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Fotoğraf boş bırakılamaz")]
-        public byte[] Photos { get; set; }
+        public ICollection<Photos> Photos { get; set; }
 
         [Required(ErrorMessage = "Qr kod boş bırakılamaz")]
         public byte[] QrCode { get; set; }
+       
+        [Column("AdminId")]
+        public int AdminId { get; set; }
+
+        [Column("Action")]
+        public string Action { get; set; }
+
+        public string IpAddress { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string Browser { get; set; }
+        public string Platform { get; set; }
     }
 
 }

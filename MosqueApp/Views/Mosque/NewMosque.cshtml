@@ -10,20 +10,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <!-- Twitter meta-->
-    <meta property="twitter:card" content="summary_large_image">
-    <!-- Open Graph Meta-->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Vali Admin">
-    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
-    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
-    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
-    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <title>Form Samples - Vali Admin</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
@@ -35,85 +21,90 @@
             <h3 class="tile-title">Cami Ekle</h3>
             <br />
             <div class="tile-body">
-                <form class="row" method="post" enctype="multipart/form-data">
+                <form class="form-row" method="post" enctype="multipart/form-data">
                     <!-- Cities için DropDownList -->
-                    <div class="mb-3">
-                        <div class="form-group">
-                            <label for="citySelect">İl seçin:</label>
-                            <select id="citySelect" class="form-control" asp-for="SelectedCityId" asp-items="@(new SelectList(Model.Cities, "Id", "Name"))">
-                                <option value="">İl seçin</option>
-                            </select>
-                        </div>
+                    <div class="form-group col-md-6">
+                        <label for="citySelect">İl seçin:</label>
+                        <select id="citySelect" class="form-control" asp-for="SelectedCityId" asp-items="@(new SelectList(Model.Cities, "Id", "Name"))">
+                            <option value="">İl seçin</option>
+                        </select>
                     </div>
 
                     <!-- Towns için DropDownList -->
-                    <div class="mb-3">
-                        <div class="form-group">
-                            <label for="townSelect">İlçe seçin:</label>
-                            <br>
-                            <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.TownId)</span>
-                            <select id="townSelect" class="form-control" asp-for="Mosque.TownId">
-                                <option value="">İlçe seçin</option>
-
-                            </select>
-                        </div>
+                    <div class="form-group col-md-6">
+                        <label for="townSelect">İlçe seçin:</label>
+                        <br>
+                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.TownId)</span>
+                        <select id="townSelect" class="form-control" asp-for="Mosque.TownId">
+                            <option value="">İlçe seçin</option>
+                        </select>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <label class="form-label">Cami Adı</label>
                         <br>
                         <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Name)</span>
-                        @Html.TextBoxFor(x => x.Mosque.Name, new { @class = "form-control", placeholder = "Cami adını giriniz" })                        
+                        @Html.TextBoxFor(x => x.Mosque.Name, new { @class = "form-control", placeholder = "Cami adını giriniz" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <label class="form-label">Başlık</label>
                         <br>
                         <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Title)</span>
                         @Html.TextBoxFor(x => x.Mosque.Title, new { @class = "form-control", placeholder = "Cami başlığı giriniz" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <label class="form-label">Adresi</label>
                         <br>
                         <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Address)</span>
                         @Html.TextBoxFor(x => x.Mosque.Address, new { @class = "form-control", placeholder = "Cami adresini giriniz" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-6">
                         <label class="form-label">Koordinat</label>
                         <br>
                         <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Coordinate)</span>
                         @Html.TextBoxFor(x => x.Mosque.Coordinate, new { @class = "form-control", placeholder = "Cami koordinatını giriniz" })
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group col-md-12 mb-3">
                         <label class="form-label">Cami Hakkında</label>
                         <br>
                         <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Description)</span>
                         @Html.TextAreaFor(x => x.Mosque.Description, new { @class = "form-control", placeholder = "Cami hakkındaki bilgileri yazın", rows = "4" })
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Gizlilik</label>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="everyone">Herkes
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="admins">Adminler
-                            </label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
+
+                    <div class="form-group col-md-6">
                         <label class="form-label">Cami Qr Kodu</label>
                         <br>
                         <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.QrCode)</span>
                         <input id="QrCode" class="form-control" type="file" accept="~/image/*" name="QrCode">
+
+                        <br>
+                        <div class="form-group col-md-12 mb-3">
+                            <label class="form-label">Gizlilik</label>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="privacy">Herkes
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="privacy">Adminler
+                                </label>
+                            </div>
+                        </div>
+        
                     </div>
-                    <div class="mb-3">
+
+                    <div class="form-group col-md-6">
                         <label class="form-label">Cami Fotoğrafları</label>
                         <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Photos)</span>
-                        <input class="form-control" type="file" accept="image/*" name="Photos">
+                        <input class="form-control" type="file" accept="image/*" name="Photos1">
+                        <br />
+                        <input class="form-control" type="file" accept="image/*" name="Photos2">
+                        <br />
+                        <input class="form-control" type="file" accept="image/*" name="Photos3">
                     </div>
-                    <div class="mb-3">
+
+
+                    <div class="form-group col-md-12 mb-3">
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox">Bilgileri kontrol ettim ve onaylıyorum
@@ -122,8 +113,10 @@
                     </div>
                     <div class="tile-footer">
                         <button class="btn btn-info"><i class="bi bi-check-circle-fill me-2"></i>Ekle</button>
-                        &nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="#"><i class="bi bi-x-circle-fill me-2"></i>İptal Et</a>
+                        &nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="/Mosque/ListMosque"><i class="bi bi-x-circle-fill me-2"></i>İptal Et</a>
                     </div>
+
+
                 </form>
             </div>
         </div>

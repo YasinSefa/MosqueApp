@@ -8,7 +8,7 @@ namespace MosqueApp.Models.Model
     {
         [Required(ErrorMessage = "İlçe boş bırakılamaz")]
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(50, ErrorMessage = "Max 50 characters")]
@@ -16,7 +16,7 @@ namespace MosqueApp.Models.Model
         public string Name { get; set; }
 
         [Column("TownId")]
-        public int TownId { get; set; }
+        public int? TownId { get; set; }
 
         [ForeignKey("City")]
         public int CityId { get; set; }

@@ -1,0 +1,63 @@
+﻿.photo-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Boşluk */
+}
+
+.photo-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 10px; /* Boşluk */
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Boşluk */
+}
+
+@media (max-width: 767px) {
+    .photo-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Add spacing between photo-input-container */
+    }
+
+    .photo-input-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px; /* Add spacing between image and input group */
+    }
+
+        .photo-input-container img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+        }
+
+    .input-group {
+        display: flex;
+        flex-direction: column; /* Display input and button in a column */
+        gap: 5px; /* Add spacing between input and button */
+        width: 100%;
+    }
+
+        .input-group input,
+        .input-group button {
+            flex: 1; /* Equal flex distribution */
+        }
+
+        .input-group button {
+            width: max-content; /* Allow button to adjust to content width */
+        }
+
+        .input-group input[name^="Photos"] {
+            width: 100%; /* Make all Photos inputs full width on mobile */
+        }
+
+        .input-group button[id^="deleteButton"] {
+            width: 100%; /* Make all delete buttons full width on mobile */
+        }
+
+}

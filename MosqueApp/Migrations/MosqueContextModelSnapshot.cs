@@ -76,6 +76,50 @@ namespace MosqueApp.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("MosqueApp.Models.Model.DeletedMosque", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Coordinate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("Photos")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<byte[]>("QrCode")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("TownId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeletedMosque");
+                });
+
             modelBuilder.Entity("MosqueApp.Models.Model.Mosque", b =>
                 {
                     b.Property<int>("Id")
@@ -103,10 +147,6 @@ namespace MosqueApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<byte[]>("Photos")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
                     b.Property<byte[]>("QrCode")
                         .IsRequired()
                         .HasColumnType("bytea");
@@ -115,7 +155,8 @@ namespace MosqueApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("TownId")
+                    b.Property<int?>("TownId")
+                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -125,13 +166,35 @@ namespace MosqueApp.Migrations
                     b.ToTable("Mosque");
                 });
 
-            modelBuilder.Entity("MosqueApp.Models.Model.Town", b =>
+            modelBuilder.Entity("MosqueApp.Models.Model.Photos", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("Base64")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("Base64");
+
+                    b.Property<int>("MosqueId")
+                        .HasColumnType("integer")
+                        .HasColumnName("MosqueId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Photos");
+                });
+
+            modelBuilder.Entity("MosqueApp.Models.Model.Town", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
                     b.Property<int>("CityId")
                         .HasColumnType("integer");
@@ -142,7 +205,7 @@ namespace MosqueApp.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Name");
 
-                    b.Property<int>("TownId")
+                    b.Property<int?>("TownId")
                         .HasColumnType("integer")
                         .HasColumnName("TownId");
 

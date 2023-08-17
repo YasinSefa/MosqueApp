@@ -6,141 +6,159 @@
     Layout = "~/Views/Shared/_SiteLayout.cshtml";
 }
 
-<br />
+<head>
+    <script src="~/js/jquery-3.7.0.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <!-- Data table plugin-->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css" />
+    <link href="~/css/table.css" rel="stylesheet" />
+</head>
+<body>
+    <br />
 
 
-<table class="table table-hover table-bordered" id="sampleTable">
-    <thead>
-        <tr>
-            <th>İsmi</th>
-            <th>Şehir</th>
-            <th>Sil</th>
-            <th>Güncelle</th>
-            <th>Detaylar</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var mosque in Model.Mosques)
-        {
+    <table class="table table-hover table-bordered" id="sampleTable">
+        <thead>
             <tr>
-                <td>@mosque.Name</td>
-                <td><option value="@mosque.TownId">@mosque.Town.City.Name</option></td>
-                <td>
-                    <a href="/Mosque/Delete/@mosque.Id" class="btn btn-danger btn-icon-split">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-trash"></i>
-                        </span>
-                        <span class="text">Sil</span>
-                    </a>
-                </td>
-                <td>
-                    <a href="/Mosque/EditMosque/@mosque.Id" class="btn btn-success btn-icon-split">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-check"></i>
-                        </span>
-                        <span class="text">Güncelle</span>
-                    </a>
-                </td>
-                <td>
-                    <button data-id="@mosque.Id" type="button" class="btn btn-info btn-icon-split" data-toggle="ajax-modal" data-target="#Modal1">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-                        <span class="text">Detaylar</span>
-                    </button>
-                </td>
-
-
+                <th>Cami Adı</th>
+                <th>İl</th>
+                <th>İlçe</th>
+                <th>Sil</th>
+                <th>Güncelle</th>
+                <th>Detaylar</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var mosque in Model.Mosques)
+            {
+                <tr>
+                    <td>@mosque.Name</td>
+                    <td><option value="@mosque.TownId">@mosque.Town.City.Name</option></td>
+                    <td><option value="@mosque.TownId">@mosque.Town.Name</option></td>
+                    <td>
+                        <button data-id="@mosque.Id" type="button" data-toggle="modal" class="btn btn-danger btn-icon-split" data-target="#deleteModal">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span class="text">Sil</span>
+                        </button>
 
-@*<div class="modal" id="Modal1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Cami Hakkında</h2>
-            </div>
-            <form>
+                    </td>
+                    <td>
+                        <button data-id="@mosque.Id" type="button" class="btn btn-success btn-icon-split edit-button">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-check"></i>
+                            </span>
+                            <span class="text">Güncelle</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button data-id="@mosque.Id" type="button" class="btn btn-info btn-icon-split" data-toggle="ajax-modal" data-target="#Modal1">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <span class="text">Detaylar</span>
+                        </button>
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Cami Detayları</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Kapat">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="modal-body">
-                    <label class="fw-bold">İl:</label>
-                    <span id="modalCity"></span><br />
-                    <label class="fw-bold">İlçe:</label>
-                    <span id="modalTown"></span><br />
-                    <label class="fw-bold">Adı:</label>
-                    <span id="modalName"></span><br />
-                    <label class="fw-bold">Adresi:</label>
-                    <span id="modalAddress"></span><br />
-                    <label class="fw-bold">Koordinat:</label>
-                    <span id="modalCoordinate"></span>
-                    <br /><label class="fw-bold">Cami Hakkında:</label>
-                    <span font="" id="modalDescription"></span><br /><br />
+                    <div style="display: flex; ">
+                        <div style="flex: 1;">
+                            <h4>İsim:</h4>
+                            <p id="modalName"></p>
+                        </div>
+                        <div style="flex: 1; margin-left: 20px;">
+                            <h4>Şehir:</h4>
+                            <p id="modalCity"></p>
+                        </div>
+                        <div style="flex: 1; margin-left: 20px;">
+                            <h4>İlçe:</h4>
+                            <p id="modalTown"></p>
+                        </div>
+                        <div style="flex: 1; margin-left: 20px;">
+                            <h4>Koordinat:</h4>
+                            <p id="modalCoordinate"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Başlık:</h4>
+                        <p id="modalTitlee"></p>
+                    </div>
+                    <div>
+                        <h4>Açıklama:</h4>
+                        <p id="modalDescription"></p>
+                    </div>
+                    <div>
+                        <h4>Adres:</h4>
+                        <p id="modalAddress"></p>
+                    </div>
+                    <div style="display: flex; ">
+                        <div style="flex: 1;">
+                            <h4>Fotoğraf:</h4>
+                            <div class="swiper-wrapper" id="slider-container">
+                                <div class="slider-item">
+                                    <img id="modalPhoto" src="" alt="Cami Fotoğrafı" >
+                                </div>
+                                <div id="nextBtn" class="swiper-button-next"></div>
+                                <div id="prevBtn" class="swiper-button-prev"></div>
+                            </div>
 
-                    <button class="btn btn-info">Kapat</button>
+                        </div>
+                        <br />
+                        <div style="flex: 1" id="qrCode1">
+                            <h4>QR Kodu:</h4>
+                            <img id="modalQrCode" src="" alt="Cami Qr Kodu" width="250" height="250">
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div>
-    </div>
-</div>*@
-
-<div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Cami Detayları</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <h4>Şehir:</h4>
-                    <p id="modalCity"></p>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="console.log('Kapat butonuna tıklandı')">Kapat</button>
                 </div>
-                <div>
-                    <h4>İlçe:</h4>
-                    <p id="modalTown"></p>
-                </div>
-                <div>
-                    <h4>İsim:</h4>
-                    <p id="modalName"></p>
-                </div>
-                <div>
-                    <h4>Adres:</h4>
-                    <p id="modalAddress"></p>
-                </div>
-                <div>
-                    <h4>Koordinat:</h4>
-                    <p id="modalCoordinate"></p>
-                </div>
-                <div>
-                    <h4>Fotoğraf:</h4>
-                    <img id="modalPhoto" src="" alt="Cami Fotoğrafı" width="300" height="200">
-                </div>
-                <div>
-                    <h4>QR Kodu:</h4>
-                    <img id="modalQrCode" src="" alt="Cami Qr Kodu" width="200" height="200">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
             </div>
         </div>
     </div>
-</div>
 
-<script src="~/js/jquery-3.7.0.min.js"></script>
-<script src="~/js/bootstrap.min.js"></script>
-<script src="~/js/main.js"></script>
-<!-- Data table plugin-->
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
-@*<script type="text/javascript" src="~/js/plugins/dataTables.bootstrap.min.js"></script>*@
-@*<script type="text/javascript">$('#sampleTable').DataTable(
-    {
-            pagingType: 'full_numbers'
-    }
-);</script>*@
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Camiyi Sil</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Camiyi silmek istediğinizden emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Kapat</button>
+                    <button id="btnYes" class="btn btn-primary btn-danger btn-icon-split"><span class="text">Sil</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+
 
 @section Scripts {
     <script>
@@ -150,7 +168,14 @@
                     "url": "//cdn.datatables.net/plug-ins/1.10.12/i18n/Turkish.json"
                 }
             });
+            var photoResults = [];
 
+            $(".edit-button").click(function () {
+                var mosqueId = $(this).data("id");
+
+                // Güncelleme işlemi için yönlendirme
+                window.location.href = "/Mosque/EditMosque/" + mosqueId;
+            });
 
             $("button[data-toggle='ajax-modal']").click(function () {
                 var mosqueId = $(this).data("id");
@@ -166,39 +191,128 @@
                         $("#modalName").text(result.mosque.name);
                         $("#modalAddress").text(result.mosque.address);
                         $("#modalCoordinate").text(result.mosque.coordinate);
+                        $("#modalTitlee").text(result.mosque.title);
+                        $("#modalDescription").text(result.mosque.description);
 
-                        // AJAX ile fotoğraf ve QR kodu verilerini alalım
+
+
                         $.ajax({
-                            url: "/Mosque/GetPhoto",
                             type: "GET",
-                            data: { id: mosqueId },
+                            url: "/Mosque/GetPhotosByMosqueId",
+                            data: { mosqueId: mosqueId },
                             dataType: "json",
-                            success: function (photoResult) {
-                                var base64Photo = photoResult.photo;
-                                $("#modalPhoto").attr("src", "data:image/jpeg;base64," + base64Photo);
+                            success: function (photoResults) {
+                                var sliderContainer = $("#slider-container");
+
+
+                                
+
+                                photoResults.forEach(function (photoResult) {
+                                    var base64Photo = photoResult.photo;
+                                    var imgElement = $("<img>").attr("src", "data:image/jpeg;base64," + base64Photo);
+                                    var sliderItem = $("<div>").addClass("slider-item").append(imgElement);
+                                    sliderContainer.append(sliderItem);
+                                });
+
+
+                                startSlider();
+                                
+
+                            },
+                            error: function () {
+                                console.error("AJAX isteği başarısız oldu.");
                             }
                         });
+
+                        function startSlider() {
+                            var currentSlide = 1;
+                            var sliderItems = $(".slider-item");
+                            var totalSlides = sliderItems.length;
+
+                            function showSlide(index) {
+                                sliderItems.hide();
+                                if (totalSlides > 0) {
+                                    sliderItems.eq(index).show();
+                                }
+                            }
+
+
+                            function nextSlide() {
+                                if (currentSlide == totalSlides - 1) {
+                                    currentSlide = (currentSlide + 2) % totalSlides;
+                                    showSlide(currentSlide);
+                                } else {
+                                    currentSlide = (currentSlide + 1) % totalSlides;
+                                    showSlide(currentSlide);
+                                }
+                                
+                            }
+
+                            function prevSlide() {
+                                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                                showSlide(currentSlide);
+                            }
+
+                            $("#nextBtn").click(nextSlide);
+                            $("#prevBtn").click(prevSlide);
+
+                            showSlide(currentSlide);
+                           
+                        }
+
+                        function clearSliderItems() {
+                            var sliderContainer = $("#slider-container");
+                            sliderContainer.find('.slider-item').remove();
+                        }
+
+                        $("#Modal1").on("hidden.bs.modal", function () {
+                            clearSliderItems();
+                        });
+
 
                         $.ajax({
                             url: "/Mosque/GetQrCode",
                             type: "GET",
                             data: { id: mosqueId },
                             dataType: "json",
-                            success: function (qrCodeResult) {      
+                            success: function (qrCodeResult) {
                                 var base64QrCode = qrCodeResult.qrCode;
                                 $("#modalQrCode").attr("src", "data:image/png;base64," + base64QrCode);
-
-                                // Modalı göster
                                 $("#Modal1").modal("show");
                             }
                         });
+
+
                     },
                     error: function () {
                         console.error("AJAX isteği başarısız oldu.");
                     }
                 });
+
+            });
+
+            $("button[data-toggle='modal']").click(function () {
+                var mosqueId = $(this).data('id');
+
+                $('#btnYes').click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Mosque/Delete", // Controller adını değiştirin.
+                        dataType: 'json',
+                        data: { id: mosqueId },
+                        success: function (response) {
+                            console.log('Silme işlemi başarılı.');
+                            window.location.reload();
+                        },
+                        error: function () {
+                            console.error('Silme işlemi başarısız oldu.');
+                        }
+                    });
+                });
             });
         });
     </script>
-    }
+}
+
+
 

@@ -1,8 +1,112 @@
 ﻿@using MosqueApp.Models.Model;
 @model List<Mosque>;
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_SiteLayout.cshtml";
 }
 
-<h5>SELAMÜNALEYKÜM</h5>
+<head>
+    <meta charset="utf-8" />
+    <title>Swiper demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css" />
+    <link href="~/css/swipper.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Swiper -->
+    <div style="--swiper-navigation-color: #000; --swiper-pagination-color: #000" class="swiper mySwiper">
+        <div class="parallax-bg" style="background-image: url('image/ahmet_cami.jpg');" data-swiper-parallax="-23%"></div>
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="title" data-swiper-parallax="-300">Ahmet Hamdi Akseki Cami</div>
+                <div class="subtitle" data-swiper-parallax="-200">Ankara</div>
+                <div class="text" data-swiper-parallax="-100">
+                    <p>
+                        2013 yılında ibadete açılan cami,Diyanet İşleri Başkanlığı ile Dinî ve Sosyal Hizmet Vakfı tarafından yaptırıldı.
+                        2006 yılında Diyanet İşleri Başkanlığı ve Dini ve Sosyal Hizmet Vakfı’nın ortalaşa düzenledikleri Cami Projeleri 
+                        İstişare Toplantısı'nda söz konusu arsada bir cami inşa edilmesi fikri olgunluk kazanmıştı.Cami, kapalı alanda 5000 
+                        kişinin, açık alan da dahil edildiğinde 30 bin kişinin namaz kılabileceği büyüklüktedir. Külliye toplam 80 bin
+                        metrekare kapalı alandan oluşuyor. Bu ilave olarak, caminin 21 dönüm büyüklüğünde bir bahçesi var.
+                    </p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="title" data-swiper-parallax="-300">Ayasofya</div>
+                <div class="subtitle" data-swiper-parallax="-200">İstanbul</div>
+                <div class="text" data-swiper-parallax="-100">
+                    <p>
+                        Eski adıyla Kutsal Bilgelik Kilisesi ve Ayasofya Müzesi veya günümüzdeki resmî adıyla Ayasofya-i Kebîr Câmi-i Şerîfi 
+                        (Kutsal Büyük Ayasofya Camii), İstanbul'da yer alan bir cami ve eski bazilika, katedral ve müzedir. Bizans İmparatoru I.
+                        Justinianus tarafından, 532-537 yılları arasında İstanbul'un tarihî yarımadasındaki eski şehir merkezine inşa ettirilmiş
+                        bazilika planlı bir patrik katedrali olmuştur. 1453 yılında İstanbul'un Osmanlılar tarafından fethedilmesinden sonra II. 
+                        Mehmed tarafından camiye dönüştürülmüştür.
+                    </p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="title" data-swiper-parallax="-300">Hacı Bayram Cami</div>
+                <div class="subtitle" data-swiper-parallax="-200">Ankara</div>
+                <div class="text" data-swiper-parallax="-100">
+                    <p>
+                        İlk zaviye olarak yapılış tarihi hicri 831 yılı (1427-1428) olan caminin ilk mimarı Mimar Mehmet Bey hakkında bilgi 
+                        bulunmamaktadır. Günümüzdeki mimari yapısı XVII. ve XVIII. yüzyıl camilerinin karakterlerini taşımaktadır. Uzunlamasına 
+                        dikdörtgen bir plana sahip yapı, taş kaideli, tuğla duvarlı ve kiremit çatılıdırCami, adını bahçesindeki Hacı Bayram Türbesi’nden alır.
+                        Mihrap duvarına bitişik olan türbe, 1429 yılında yapılmıştır
+                    </p>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="title" data-swiper-parallax="-300">Sultanahmet Cami</div>
+                <div class="subtitle" data-swiper-parallax="-200">İstanbul</div>
+                <div class="text" data-swiper-parallax="-100">
+                    <p>
+                        1609-1617 yılları arasında Osmanlı Padişahı I. Ahmed tarafından İstanbul'daki tarihî yarımadada, Mimar Sedefkâr Mehmed Ağa'ya yaptırılmıştır.
+                        Cami; mavi, yeşil ve beyaz renkli İznik çinileriyle bezendiği için ve yarım kubbeleri ile büyük kubbesinin içi de yine mavi ağırlıklı kalem 
+                        işleriyle süslendiği için Avrupalılar tarafından "Mavi Camii (Blue Mosque)" olarak adlandırılır. Ayasofya'nın 1935 yılında camiden müzeye
+                        dönüştürülmesiyle, İstanbul'un ana camii konumuna ulaşmıştır.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+
+        <head>
+            <meta charset="utf-8">
+            <title>MP3 Çalar Örneği</title>
+        </head>
+        <body>
+            <h1>MP3 Çalar Örneği</h1>
+            <audio controls>
+                <source src="mp3/Ezan.mp3" type="audio/mpeg">
+                Tarayıcınız, ses dosyası oynatmayı desteklemiyor.
+            </audio>
+        </body>
+    </div>
+
+
+</body>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        speed: 800,
+        parallax: true,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+</script>
+
