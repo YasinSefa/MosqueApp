@@ -23,39 +23,7 @@ namespace MosqueApp.Controllers
             this._context = new MosqueContext();
         }
 
-        // GET: MosqueController
-        public ActionResult Index()
-        {
 
-            return View();
-        }
-
-        // GET: MosqueController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: MosqueController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: MosqueController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: MosqueController/Edit/5
         public IActionResult EditMosque(int id)
@@ -89,6 +57,46 @@ namespace MosqueApp.Controllers
         public IActionResult UpdateMosque(Mosque mosque, int cityId, IFormFile Photos1, IFormFile Photos2, IFormFile Photos3, IFormFile QrCode, Photos photos)
         {
             var mos = _context.Mosques.Find(cityId);
+            var ph = _context.Photos.Where(photo => photo.MosqueId == mos.Id).ToList();
+
+            if (mosque.Town.Id == -1 || mosque.Town.Id == null || string.IsNullOrEmpty(mosque.Name) ||
+                string.IsNullOrEmpty(mosque.Title) || string.IsNullOrEmpty(mosque.Address) ||
+                string.IsNullOrEmpty(mosque.Coordinate) || string.IsNullOrEmpty(mosque.Description)
+                )
+            {
+                var cities = _context.Cities.ToList();
+                var admins = _context.Admins.ToList();
+                var mosques = _context.Mosques.ToList();
+                var towns = _context.Towns.ToList();
+
+
+
+                if (QrCode != null && QrCode.Length > 0)
+
+                {
+                    var memoryStream = new MemoryStream();
+                    QrCode.CopyTo(memoryStream);
+                    mosque.QrCode = memoryStream.ToArray();
+
+                }
+
+                var viewModel = new MosqueViewModel
+                {
+                    Cities = cities,
+                    Admins = admins,
+                    Mosques = mosques,
+                    Towns = towns,
+                    Mosque = mos,
+                    // Diğer özellikleri de burada doldurabilirsiniz.
+                    // SelectedCityId = ...,
+                    // SelectedTownId = ...,
+                };
+
+                TempData["ErrorMessage"] = " Lütfen tüm gereken alanları doldurun.";
+                return RedirectToAction("EditMosque", "Mosque", new { id = cityId });
+            }
+
+
 
             var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             var timestamp = DateTime.UtcNow;
@@ -124,7 +132,7 @@ namespace MosqueApp.Controllers
             mos.Coordinate = mosque.Coordinate;
             mos.Description = mosque.Description;
 
-            var ph = _context.Photos.Where(photo => photo.MosqueId == mos.Id).ToList();
+
 
             if (Photos1 != null && Photos1.Length > 0)
             {
@@ -282,35 +290,8 @@ namespace MosqueApp.Controllers
             throw new NotImplementedException();
         }
 
-        // POST: MosqueController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // POST: MosqueController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+
 
         public JsonResult ShowTowns(int Id)
         {
@@ -349,7 +330,7 @@ namespace MosqueApp.Controllers
             var platform = Environment.OSVersion.Platform.ToString();
 
 
-            if (mosque.TownId == null || string.IsNullOrEmpty(mosque.Name) || string.IsNullOrEmpty(mosque.Title) || string.IsNullOrEmpty(mosque.Address) || string.IsNullOrEmpty(mosque.Coordinate) || string.IsNullOrEmpty(mosque.Description) || QrCode == null || QrCode.Length == 0 || Photos1 == null || Photos1.Length == 0)
+            if (mosque.TownId == -1 || mosque.TownId == null || string.IsNullOrEmpty(mosque.Name) || string.IsNullOrEmpty(mosque.Title) || string.IsNullOrEmpty(mosque.Address) || string.IsNullOrEmpty(mosque.Coordinate) || string.IsNullOrEmpty(mosque.Description) || QrCode == null || QrCode.Length == 0 || Photos1 == null || Photos1.Length == 0)
             {
                 var cities = _context.Cities.ToList();
                 var admins = _context.Admins.ToList();
@@ -373,6 +354,8 @@ namespace MosqueApp.Controllers
                         // SelectedCityId = ...,
                         // SelectedTownId = ...,
                     };
+
+                    ViewData["ErrorMessage"] = " Lütfen tüm gereken alanları doldurun.";
                     return View(viewModel);
 
                 }
@@ -387,6 +370,8 @@ namespace MosqueApp.Controllers
                         // SelectedCityId = ...,
                         // SelectedTownId = ...,
                     };
+
+                    ViewData["ErrorMessage"] = " Lütfen tüm gereken alanları doldurun.";
                     return View(viewModel);
                 }
 
@@ -487,7 +472,7 @@ namespace MosqueApp.Controllers
             return RedirectToAction("ListMosque");
         }
 
-
+        [HttpGet]
         public IActionResult ListMosque()
         {
             var cities = _context.Cities.ToList();
@@ -698,9 +683,6 @@ namespace MosqueApp.Controllers
                 }
             }
 
-
-
-
             try
             {
                 _context.SaveChanges();
@@ -799,12 +781,184 @@ namespace MosqueApp.Controllers
 
         }
 
-        public ActionResult GetProductsAsJson()
+        [HttpGet("Mosque/GetMosquesAsJson")]
+        public ActionResult GetMosquesAsJson()
         {
-            List<Mosque> products = _context.Mosques.ToList(); // Verileri al
-            string json = JsonConvert.SerializeObject(products); // Verileri JSON formatına çevir
+            List<Mosque> mosques = _context.Mosques.ToList(); // Cami verilerini al
+
+            // Cami listesini oluştururken her bir cami için Photos verilerini de ekleyin
+            List<object> mosqueData = new List<object>();
+            foreach (var mosque in mosques)
+            {
+                List<Photos> photosList = _context.Photos.Where(p => p.MosqueId == mosque.Id).ToList();
+                mosque.Photos = photosList;
+
+                mosqueData.Add(mosque);
+            }
+
+            string json = JsonConvert.SerializeObject(mosqueData); // JSON formatına çevir
             return Content(json, "application/json"); // JSON verilerini içeren bir ActionResult döndür
         }
+
+
+        [HttpGet("Mosque/GetMosquesAsJson/{id}")]
+        public ActionResult GetMosquesAsJson(int id)
+        {
+            Mosque mosque = _context.Mosques.FirstOrDefault(m => m.Id == id); // Id'ye göre camiyi bul
+
+            if (mosque == null)
+            {
+                return NotFound(); // Eğer cami bulunamazsa 404 NotFound döndür
+            }
+
+            // Cami için ait resimleri de getir
+            List<Photos> photosList = _context.Photos.Where(p => p.MosqueId == mosque.Id).ToList();
+            mosque.Photos = photosList;
+
+            string json = JsonConvert.SerializeObject(mosque); // Veriyi JSON formatına çevir
+            return Content(json, "application/json"); // JSON verilerini içeren bir ActionResult döndür
+        }
+
+
+        [HttpGet("Mosque/GetByCitiesMosquesAsJson/{id}")]
+        public ActionResult GetByCitiesMosquesAsJson(int id)
+        {
+            List<Mosque> mosques = _context.Mosques.Where(m => m.Town.CityId == id).ToList(); // Belirli şehirdeki camileri filtrele
+
+            if (mosques.Count == 0)
+            {
+                return NotFound(); // Eğer cami bulunamazsa 404 NotFound döndür
+            }
+
+            // Cami listesini oluştururken her bir cami için Photos verilerini de ekleyin
+            List<object> mosqueData = new List<object>();
+            foreach (var mosque in mosques)
+            {
+                List<Photos> photosList = _context.Photos.Where(p => p.MosqueId == mosque.Id).ToList();
+                mosque.Photos = photosList;
+
+                mosqueData.Add(mosque);
+            }
+
+            string json = JsonConvert.SerializeObject(mosqueData); // Cami listesini JSON formatına çevir
+            return Content(json, "application/json"); // JSON verilerini içeren bir ActionResult döndür
+        }
+
+        [HttpGet("Mosque/GetPhotosAsJson/{id}")]
+        public ActionResult GetPhotosAsJson(int id)
+        {
+            List<Photos> photosList = _context.Photos.Where(p => p.MosqueId == id).ToList(); // Id'ye göre filtreleme
+            if (photosList.Count == 0)
+            {
+                return NotFound(); // Eğer fotoğraf bulunamazsa 404 NotFound döndür
+            }
+
+            string json = JsonConvert.SerializeObject(photosList); // Veriyi JSON formatına çevir
+            return Content(json, "application/json"); // JSON verilerini içeren bir ActionResult döndür
+        }
+
+        [HttpGet("Mosque/GetRandomMosquesAsJson/{count}")]
+        public ActionResult GetRandomMosquesAsJson(int count)
+        {
+            if (count <= 0)
+            {
+                return BadRequest("Count must be a positive number.");
+            }
+
+            List<Mosque> allMosques = _context.Mosques.ToList();
+            if (allMosques.Count <= count)
+            {
+                return BadRequest("O kadar cami yok");
+            }
+
+            Random random = new Random();
+            List<Mosque> randomMosques = new List<Mosque>();
+
+            while (randomMosques.Count < count)
+            {
+                int randomIndex = random.Next(0, allMosques.Count);
+                if (!randomMosques.Contains(allMosques[randomIndex]))
+                {
+                    randomMosques.Add(allMosques[randomIndex]);
+                }
+            }
+
+            // Cami listesini oluştururken her bir cami için Photos verilerini de ekleyin
+            List<object> mosqueData = new List<object>();
+            foreach (var mosque in randomMosques)
+            {
+                List<Photos> photosList = _context.Photos.Where(p => p.MosqueId == mosque.Id).ToList();
+                mosque.Photos = photosList;
+
+                mosqueData.Add(mosque);
+            }
+
+            string json = JsonConvert.SerializeObject(mosqueData);
+            return Content(json, "application/json");
+        }
+
+        [HttpGet("Mosque/GetByTownsMosquesAsJson/{id}")]
+        public ActionResult GetByTownsMosquesAsJson(int id)
+        {
+            List<Mosque> mosques = _context.Mosques.Where(m => m.Town.Id == id).ToList(); // Belirli şehirdeki camileri filtrele
+
+            if (mosques.Count == 0)
+            {
+                return NotFound(); // Eğer cami bulunamazsa 404 NotFound döndür
+            }
+
+            // Cami listesini oluştururken her bir cami için Photos verilerini de ekleyin
+            List<object> mosqueData = new List<object>();
+            foreach (var mosque in mosques)
+            {
+                List<Photos> photosList = _context.Photos.Where(p => p.MosqueId == mosque.Id).ToList();
+                mosque.Photos = photosList;
+
+                mosqueData.Add(mosque);
+            }
+
+            string json = JsonConvert.SerializeObject(mosqueData); // Cami listesini JSON formatına çevir
+            return Content(json, "application/json"); // JSON verilerini içeren bir ActionResult döndür
+        }
+
+        [HttpGet("Mosque/GetMosquesByNameAsJson/{name}")]
+        public ActionResult GetMosquesByNameAsJson(string name)
+        {
+            // Cami adına göre arama yap
+            List<Mosque> mosques = _context.Mosques.ToList(); // Tüm camileri çek
+
+            mosques = mosques
+                .Where(m => m.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) == 0 ||
+                            m.Name.IndexOf(" " + name, StringComparison.OrdinalIgnoreCase) >= 0)
+                .OrderBy(m => m.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase))
+                .ToList(); // Adı verilen camilere filtre uygula ve sırala
+
+            if (mosques.Count == 0)
+            {
+                return NotFound(); // Eğer cami bulunamazsa 404 NotFound döndür
+            }
+
+            // Her bir cami için ait resimleri de getir
+            foreach (var mosque in mosques)
+            {
+                List<Photos> photosList = _context.Photos.Where(p => p.MosqueId == mosque.Id).ToList();
+                mosque.Photos = photosList;
+            }
+
+            string json = JsonConvert.SerializeObject(mosques); // Veriyi JSON formatına çevir
+            return Content(json, "application/json"); // JSON verilerini içeren bir ActionResult döndür
+        }
+
+
+
+
+        public IActionResult GoogleMaps()
+        {
+            return View();
+        }
+
+
+
 
     }
 

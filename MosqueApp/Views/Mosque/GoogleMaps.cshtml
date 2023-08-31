@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "GoogleMaps";
+    Layout = "~/Views/Shared/_SiteLayout.cshtml";
+}
+
+<!doctype html>
+
+<html>
+<head>
+    <title>Add Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+</head>
+<body>
+    <h3>My Google Maps Demo</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <script>
+        var map;
+        function initmap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: -34.397, lng: 150.644
+                },
+                zoom: 8
+            });
+
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr_d5aFnaBz6jlzpVwOBVQ02NZSYTgU6w&callback=initMap"></script>
+</body>
+</html>
+
+
+<style>
+    #map {
+        height: 400px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>

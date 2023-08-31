@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="~/css/alert.css" rel="stylesheet" />
 </head>
 <body class="app sidebar-mini">
     <div class="col-md-20">
@@ -22,9 +23,20 @@
             <br />
             <div class="tile-body">
                 <form class="form-row" method="post" enctype="multipart/form-data">
+
+                    <div id="custom-alert" class="custom-alert">
+                        @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+                        {
+                            <div class="alert alert-dismissible alert-danger d-flex align-items-center custom-alert-content">
+                                <strong>Hata!</strong>&nbsp;@ViewData["ErrorMessage"]
+                                <span class="ms-auto">@Html.Raw("<button class='btn-close' type='button' data-bs-dismiss='alert'></button>")</span>
+                            </div>
+                        }
+                    </div>
+
                     <!-- Cities için DropDownList -->
                     <div class="form-group col-md-6">
-                        <label for="citySelect">İl seçin:</label>
+                        <label for="citySelect">*İl seçin:</label>
                         <select id="citySelect" class="form-control" asp-for="SelectedCityId" asp-items="@(new SelectList(Model.Cities, "Id", "Name"))">
                             <option value="">İl seçin</option>
                         </select>
@@ -32,69 +44,42 @@
 
                     <!-- Towns için DropDownList -->
                     <div class="form-group col-md-6">
-                        <label for="townSelect">İlçe seçin:</label>
+                        <label for="townSelect">*İlçe seçin:</label>
                         <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.TownId)</span>
                         <select id="townSelect" class="form-control" asp-for="Mosque.TownId">
                             <option value="">İlçe seçin</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="form-label">Cami Adı</label>
+                        <label class="form-label">*Cami Adı</label>
                         <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Name)</span>
                         @Html.TextBoxFor(x => x.Mosque.Name, new { @class = "form-control", placeholder = "Cami adını giriniz" })
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="form-label">Başlık</label>
+                        <label class="form-label">*Başlık</label>
                         <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Title)</span>
                         @Html.TextBoxFor(x => x.Mosque.Title, new { @class = "form-control", placeholder = "Cami başlığı giriniz" })
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="form-label">Adresi</label>
+                        <label class="form-label">*Adresi</label>
                         <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Address)</span>
                         @Html.TextBoxFor(x => x.Mosque.Address, new { @class = "form-control", placeholder = "Cami adresini giriniz" })
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="form-label">Koordinat</label>
+                        <label class="form-label">*Koordinat</label>
                         <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Coordinate)</span>
                         @Html.TextBoxFor(x => x.Mosque.Coordinate, new { @class = "form-control", placeholder = "Cami koordinatını giriniz" })
                     </div>
                     <div class="form-group col-md-12 mb-3">
-                        <label class="form-label">Cami Hakkında</label>
+                        <label class="form-label">*Cami Hakkında</label>
                         <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.Description)</span>
                         @Html.TextAreaFor(x => x.Mosque.Description, new { @class = "form-control", placeholder = "Cami hakkındaki bilgileri yazın", rows = "4" })
                     </div>
 
-                    <div class="form-group col-md-6">
-                        <label class="form-label">Cami Qr Kodu</label>
-                        <br>
-                        <span class="validation-error">@Html.ValidationMessageFor(x => x.Mosque.QrCode)</span>
-                        <input id="QrCode" class="form-control" type="file" accept="~/image/*" name="QrCode">
 
-                        <br>
-                        <div class="form-group col-md-12 mb-3">
-                            <label class="form-label">Gizlilik</label>
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="privacy">Herkes
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="privacy">Adminler
-                                </label>
-                            </div>
-                        </div>
-        
-                    </div>
 
                     <div class="form-group col-md-6">
-                        <label class="form-label">Cami Fotoğrafları</label>
+                        <label class="form-label">*Cami Fotoğrafları</label>
                         <br>
                         <input class="form-control" type="file" accept="image/*" name="Photos1">
                         <br />
@@ -104,19 +89,19 @@
                     </div>
 
 
-                    <div class="form-group col-md-12 mb-3">
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox">Bilgileri kontrol ettim ve onaylıyorum
-                            </label>
-                        </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="form-label">*Cami Qr Kodu</label>
+                        <br>
+                        <input id="QrCode" class="form-control" type="file" accept="~/image/*" name="QrCode">
+
+                        <br />
                     </div>
-                    <div class="tile-footer">
+
+                    <div class="tile-footer col-md-6">
                         <button class="btn btn-info"><i class="bi bi-check-circle-fill me-2"></i>Ekle</button>
                         &nbsp;&nbsp;&nbsp;<a class="btn btn-secondary" href="/Mosque/ListMosque"><i class="bi bi-x-circle-fill me-2"></i>İptal Et</a>
                     </div>
-
-
                 </form>
             </div>
         </div>
@@ -142,6 +127,30 @@
 
     @section Scripts {
         <script>
+            window.onload = function () {
+                const customAlert = document.getElementById('custom-alert');
+
+                // Alert göster
+                function showAlert() {
+                    customAlert.style.display = 'block';
+                }
+
+                // Alert gizle
+                function hideAlert() {
+                    customAlert.style.display = 'none';
+                }
+
+                // Buton tıklandığında alerti göster
+                const closeButton = customAlert.querySelector('.btn-close');
+                closeButton.addEventListener('click', hideAlert);
+
+                // Mesaj varsa alerti göster
+                const errorMessage = '@ViewData["ErrorMessage"]';
+                if (errorMessage.trim() !== '') {
+                    showAlert();
+                }
+            };
+
             $(function () {
                 $("#citySelect").change(function () {
                     $("#townSelect").empty();
@@ -160,15 +169,12 @@
                     })
                 })
             })
+
+            const alertList = document.querySelectorAll('.alert');
+            const alerts = [...alertList].map(element => new bootstrap.Alert(element));
         </script>
     }
 
-    <style>
-        /* Kırmızı rengini tanımlayalım */
-        .validation-error {
-            color: red;
-        }
-    </style>
 </body>
 </html>
 

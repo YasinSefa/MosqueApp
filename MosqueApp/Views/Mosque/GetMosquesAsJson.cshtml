@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewData["Title"] = "GetProductsAsJson";
+    Layout = "~/Views/Shared/_SiteLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Get Mosque by ID</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Get Mosque by ID</h1>
+    <form id="getMosqueForm">
+        <label for="id">Enter Mosque ID:</label>
+        <input type="number" id="id" name="id" required>
+        <button type="submit">Get Mosque</button>
+    </form>
+    <div id="result">
+        <!-- JSON result will be displayed here -->
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#getMosqueForm").submit(function (event) {
+                event.preventDefault();
+                var id = $("#id").val();
+                $.ajax({
+                    url: "/Mosque/GetMosquesAsJson/" + id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        var resultDiv = $("#result");
+                        resultDiv.empty();
+                        resultDiv.append(JSON.stringify(data, null, 2));
+                    },
+                    error: function () {
+                        var resultDiv = $("#result");
+                        resultDiv.empty();
+                        resultDiv.text("Mosque not found.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
