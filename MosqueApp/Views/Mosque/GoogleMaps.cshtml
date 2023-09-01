@@ -1,48 +1,115 @@
-﻿@{
-    ViewData["Title"] = "GoogleMaps";
-    Layout = "~/Views/Shared/_SiteLayout.cshtml";
-}
-
-<!doctype html>
-
+﻿<!doctype html>
 <html>
 <head>
-    <title>Add Map</title>
+    <title>Add Map with Place Selection</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <script type="module" src="./index.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjDb3s65yMp8psUuhVwIsOrAM3J18IBf4&libraries=places&callback=initMap"></script>
 </head>
 <body>
-    <h3>My Google Maps Demo</h3>
-    <!--The div element for the map -->
     <div id="map"></div>
+    <div id="selectedLocation">
+        <p><strong>Seçilen Konum Koordinatı:</strong></p>
+        <p>
+            Latitude: <span id="lat"></span>
+        </p>
+        <p>
+            Longitude: <span id="lng"></span>
+        </p>
+        <button id="copyButton">Kopyala</button>
+    </div>
+
     <script>
         var map;
-        function initmap() {
+        var placeService;
+        var marker;
+
+        function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: {
-                    lat: -34.397, lng: 150.644
+                    lat: 39.906434, lng: 32.761960
                 },
                 zoom: 8
             });
 
+            // Create a PlaceService instance for searching places
+            placeService = new google.maps.places.PlacesService(map);
+
+            // Add event listener for clicks on the map
+            map.addListener('click', handleMapClick);
+
+            // Add event listener for the copy button
+            document.getElementById('copyButton').addEventListener('click', copyCoordinates);
+        }
+
+        function handleMapClick(event) {
+            // Clear any existing markers
+            clearMarkers();
+
+            // Create a marker for the clicked location
+            marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map,
+                title: 'Selected Location'
+            });
+
+            // Display the lat-lng of the selected location
+            document.getElementById('lat').textContent = event.latLng.lat();
+            document.getElementById('lng').textContent = event.latLng.lng();
+        }
+
+        function copyCoordinates() {
+            // Get the lat-lng coordinates
+            var lat = document.getElementById('lat').textContent;
+            var lng = document.getElementById('lng').textContent;
+
+            // Create a textarea element to hold the coordinates
+            var textarea = document.createElement('textarea');
+            textarea.value = lat + ', ' + lng;
+            document.body.appendChild(textarea);
+
+            // Select the text in the textarea
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text to the clipboard
+            document.execCommand('copy');
+
+            // Clean up
+            document.body.removeChild(textarea);
+
+            alert('Koordinatlar panoya kopyalandı!');
+        }
+
+
+        function clearMarkers() {
+            // Remove the previous marker if it exists
+            if (marker) {
+                marker.setMap(null);
+            }
         }
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr_d5aFnaBz6jlzpVwOBVQ02NZSYTgU6w&callback=initMap"></script>
+
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #selectedLocation {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
 </body>
 </html>
-
-
-<style>
-    #map {
-        height: 400px; /* The height is 400 pixels */
-        width: 100%; /* The width is the width of the web page */
-    }
-
-    html,
-    body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-</style>
